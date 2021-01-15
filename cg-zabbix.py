@@ -32,10 +32,7 @@ def average_series(metrics_series_structure):
     count = 0
     sum = 0
     for datapoints in metrics_series_structure.get("data",[{}])[0].get("datapoints",[{}]):
-        if isinstance(datapoints,dict) and (datapoints.get("value",None) is not None):
-            count += 1
-            sum += datapoints.get("value",0)
-        if isinstance(datapoints,list) and (datapoints[0].get("value",None) is not None):
+        if (datapoints.get("value",None) is not None):
             count += 1
             sum += datapoints.get("value",0)
     if count != 0:
@@ -172,4 +169,5 @@ def main():
 
 
 result = main()
-if result: print(result) 
+if result is not None: 
+    print(result) 
