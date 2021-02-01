@@ -162,6 +162,38 @@ def main():
                 if str(measurement).lower() in str(series.get("series",[{}])[0].get('name',{})).lower():
                     return( average_series( series.get("series")[0] ))
             return None
+        elif action == "appresponse":
+            ### Parameters:     site_id     app_name    measurement
+            ### Interval 15 mins
+            site_id = sys.argv[2]  # Site_ID (REQUIRED)
+            app_name = sys.argv[3] ## App Name
+            measurement = str(sys.argv[4]).lower()   ### NTT, RTT, SRT, UDPTRT
+                                        ### NTT     = AppNormalizedNetworkTransferTime
+                                        ### RTT     = AppRoundTripTime
+                                        ### SRT     = AppServerResponseTime
+                                        ### UDP-TRT = AppUDPTransactionResponseTime
+            app_id  = get_app_id_from_name(sdk, app_name)
+            interval = .25  ###15 minutes
+            end_time = datetime.now().isoformat() #.strftime("%Y-%m-%dT%H:%M:%SZ")
+            start_time = (datetime.now() - timedelta(hours=(interval))).isoformat() 
+            if measurement == "ntt": measurement = "AppNormalizedNetworkTransferTime"
+            if measurement == "rtt": measurement = "AppRoundTripTime"
+            if measurement == "srt": measurement = "AppServerResponseTime"
+            if measurement == "udptrt": measurement = "AppUDPTransactionResponseTime"
+            post_data = {"start_time": str(start_time) + "Z" ,"end_time": str(end_time) + "Z",
+                        "interval":"10sec",
+                        "metrics":[
+                            {"name":"AppNormalizedNetworkTransferTime","statistics":["average"],"unit":"milliseconds"},
+                            {"name":"AppRoundTripTime","statistics":["average"],"unit":"milliseconds"},
+                            {"name":"AppServerResponseTime","statistics":["average"],"unit":"milliseconds"},
+                            {"name":"AppUDPTransactionResponseTime","statistics":["average"],"unit":"milliseconds"}   ],
+                        "view":{},
+                        "filter":{"site":[str(site_id)],"app":[str(app_id)]}}
+            metrics = sdk.post.metrics_monitor(post_data).cgx_content
+            for series in metrics.get("metrics",[{}]):
+                if str(measurement).lower() in str(series.get("series",[{}])[0].get('name',{})).lower():
+                    return( average_series( series.get("series")[0] ))
+            return None
         else:
             return None
     except:
