@@ -42,5 +42,11 @@ Returns the average past 15 minute per site (optional), per app (optional) Utili
 Returns the average past 15 minute per site (optional), per app (optional) L7 measurement of 'AppSuccessfulConnections', 'AppSuccessfulTransactions', 'AppFailedToEstablish', or 'AppTransactionFailures' based on the input filters
 
 
+## appresponse
+- param1 - Site_ID. Unique Site ID number for the site to filter on. Required.
+- param2 - App_Name. Friendly name of Circuit to perform measurement on. Required. Case Sensitive.
+- param3 - Measurement. Must be either 'NTT', 'RTT', 'SRT', or 'UDPTRT'
+
+Returns the average past 15 minute per site and per app L7 measurement of 'AppNormalizedNetworkTransferTime', 'AppRoundTripTime', 'AppServerResponseTime', or 'AppUDPTransactionResponseTime' based on the input filters. Note that unlike other queries, 0 may not be used for site-id or app_name.
 
 
